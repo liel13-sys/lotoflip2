@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil do Usuário - Lotto Flip</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
+        }
+        .container {
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .account-balance {
+            font-size: 32px;
+            text-align: center;
+            margin: 30px 0;
+            color: #27ae60;
+            font-weight: 600;
+        }
+        .user-info {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f0f3f7;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .transaction-history {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f0f3f7;
+            border-radius: 12px;
+        }
+        .transaction-history h3 {
+            font-size: 20px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        .transaction {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+        .transaction p {
+            margin: 0;
+            font-size: 16px;
+            color: #555;
+        }
+        .transaction .amount {
+            font-weight: 600;
+            color: #333;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+        button {
+            padding: 12px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .deposit-btn {
+            background-color: #27ae60;
+            color: white;
+        }
+        .deposit-btn:hover {
+            background-color: #2ecc71;
+        }
+        .withdraw-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .withdraw-btn:hover {
+            background-color: #c0392b;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .info {
+            text-align: center;
+            font-size: 14px;
+            color: #999;
+            margin-top: 10px;
+        }
+    </style>
+    <!-- Inclua o Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
+</head>
+<body>
+
+<center>
+    <img src="img/logo.jpg" alt="Descrição da Imagem">
+</center>
+
+<div class="container">
+    <h1>Perfil do Usuário</h1>
+
+    <!-- Informações do usuário -->
+    <div class="user-info">
+        <h3>Informações Pessoais</h3>
+        <p>Nome: <span id="user-name">Carregando...</span></p>
+        <p>E-mail: <span id="user-email">Carregando...</span></p>
+        <p>CPF: <span id="user-cpf">Carregando...</span></p>
+    </div>
+
+    <!-- Valor total da conta -->
+    <div class="account-balance">
+        Saldo total: R$<span id="account-balance">0.00</span>
+    </div>
+
+    <!-- Histórico de transações -->
+    <div class="transaction-history">
+        <h3>Histórico de Transações</h3>
+        <div class="transaction">
+            <p>Saque</p>
+            <p class="amount">-R$5.00</p>
+        </div>
+        <div class="transaction">
+            <p>Depósito</p>
+            <p class="amount">+R$20.00</p>
+        </div>
+    </div>
+
+    <!-- Botões de saque e depósito -->
+    <div class="buttons">
+        <button class="deposit-btn" onclick="deposit()">Depositar</button>
+        <button class="withdraw-btn" onclick="withdraw()" disabled id="withdraw-btn">Sacar</button>
+    </div>
+
+    <div class="info">
+        * Saque mínimo de R$5,00 | Depósito mínimo de R$5,00
+    </div>
+</div>
+
+   <script>
+    // Configuração do Firebase
+    const firebaseConfig = {
+  apiKey: "AIzaSyCR802fJbDk6pe_Eh49wzkHM215PYVu6kg",
+  authDomain: "lottoflip-f4abd.firebaseapp.com",
+  projectId: "lottoflip-f4abd",
+  storageBucket: "lottoflip-f4abd.appspot.com",
+  messagingSenderId: "322656396128",
+  appId: "1:322656396128:web:b67e88e5522301b019f405",
+  measurementId: "G-GH85SPQ657"
+};
+    
+    // Inicializar Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // Função para buscar informações do usuário
+    function fetchUserProfile(userId) {
+        const userRef = database.ref('users/' + userId);
+        userRef.once('value')
+            .then((snapshot) => {
+                const userData = snapshot.val();
+                if (userData) {
+                    document.getElementById('user-name').innerText = userData.fullName || 'N/A';
+                    document.getElementById('user-email').innerText = userData.email || 'N/A';
+                    document.getElementById('user-cpf').innerText = userData.cpf || 'N/A';
+                    document.getElementById('account-balance').innerText = userData.balance ? userData.balance.toFixed(2) : '0.00';
+
+                    // Preencher o histórico de transações
+                    populateTransactionHistory(userData.transactions || []);
+                } else {
+                    alert('Usuário não encontrado.');
+                }
+            })
+            .catch((error) => {
+                console.error('Erro ao buscar dados do usuário:', error);
+            });
+    }
+
+    // Função para popular o histórico de transações
+    function populateTransactionHistory(transactions) {
+        const transactionHistoryDiv = document.querySelector('.transaction-history');
+        transactionHistoryDiv.innerHTML = ''; // Limpa a lista atual
+
+        transactions.forEach(transaction => {
+            const transactionDiv = document.createElement('div');
+            transactionDiv.className = 'transaction';
+            transactionDiv.innerHTML = `
+                <p>${transaction.type}</p>
+                <p class="amount">${transaction.amount > 0 ? '+' : ''}R$${Math.abs(transaction.amount).toFixed(2)}</p>
+            `;
+            transactionHistoryDiv.appendChild(transactionDiv);
+        });
+    }
+
+    // Função de depósito
+    function deposit() {
+        let balance = parseFloat(document.getElementById('account-balance').innerText);
+        balance += 5;
+        document.getElementById('account-balance').innerText = balance.toFixed(2);
+        document.getElementById('withdraw-btn').disabled = balance < 5;
+    }
+
+    // Função de saque
+    function withdraw() {
+        let balance = parseFloat(document.getElementById('account-balance').innerText);
+        if (balance >= 5) {
+            balance -= 5;
+            document.getElementById('account-balance').innerText = balance.toFixed(2);
+            document.getElementById('withdraw-btn').disabled = balance < 5;
+        }
+    }
+
+    // Chame a função para buscar informações do usuário
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+        fetchUserProfile(userId);
+    } else {
+        window.location.href = 'login.html'; // Redireciona para a tela de login
+    }
+</script>
+
+</body>
+</html>

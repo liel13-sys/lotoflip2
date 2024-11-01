@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Números</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <script type="module">
+        // Importações do Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCR802fJbDk6pe_Eh49wzkHM215PYVu6kg",
+            authDomain: "lottoflip-f4abd.firebaseapp.com",
+            projectId: "lottoflip-f4abd",
+            storageBucket: "lottoflip-f4abd.appspot.com",
+            messagingSenderId: "322656396128",
+            appId: "1:322656396128:web:b67e88e5522301b019f405",
+            measurementId: "G-GH85SPQ657"
+        };
+
+        // Inicializa o Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth();
+
+        // Função para logout
+        function logoutUser() {
+            signOut(auth).then(() => {
+                alert("Você saiu da conta.");
+            }).catch((error) => {
+                console.error("Erro ao sair:", error);
+            });
+        }
+
+        // Autenticação do usuário
+        onAuthStateChanged(auth, (user) => {
+            const userNameElement = document.getElementById('userName');
+            const onlineStatusElement = document.getElementById('onlineStatus');
+            const overlay = document.getElementById('overlay'); // Elemento overlay
+
+            if (user) {
+                // Usuário está conectado
+                const userName = user.displayName || "Usuário"; 
+                userNameElement.innerText = `Olá, ${userName}!`;
+                onlineStatusElement.innerText = 'Online';
+                onlineStatusElement.style.color = 'green'; 
+                onlineStatusElement.style.cursor = 'pointer'; // Adiciona cursor de ponteiro
+                onlineStatusElement.onclick = logoutUser; // Define a função de logout ao clicar
+                overlay.style.display = 'none'; // Oculta o overlay
+            } else {
+                // Usuário não está conectado
+                userNameElement.innerText = '';
+                onlineStatusElement.innerText = 'Offline';
+                onlineStatusElement.style.color = 'red'; 
+                onlineStatusElement.style.cursor = 'default';
+                onlineStatusElement.onclick = null; // Remove o evento de clique
+                overlay.style.display = 'flex'; // Mostra o overlay
+            }
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-buttons">
+            <button onclick="window.location.href='index.html'">Casa</button>
+            <button onclick="window.location.href='baixacasa.html'">Casa Baixa</button>
+            <button onclick="window.location.href='casalta.html'">Casa Alta</button>
+            <button onclick="window.location.href='casasuprema.html'">Casa Suprema</button>
+            <button onclick="window.location.href='perfil.html'">Perfil</button>
+            <img src="img/logo.jpg" alt="Descrição da Imagem">
+        </div>
+        <div id="userStatus">
+            <span id="userName"></span>
+            <span id="onlineStatus"></span>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <center>
+            <h1>Servidores Online</h1>
+        </center>
+
+        <div class="room-buttons">
+            <button onclick="window.location.href='sala1.html'">Sala 1</button>
+            <button onclick="window.location.href='sala2.html'">Sala 2</button>
+            <button onclick="window.location.href='sala3.html'">Sala 3</button>
+            <button onclick="window.location.href='sala4.html'">Sala 4</button>
+            <button onclick="window.location.href='sala5.html'">Sala 5</button>
+            <button onclick="window.location.href='sala6.html'">Sala 6</button>
+            <button onclick="window.location.href='sala7.html'">Sala 7</button>
+            <button onclick="window.location.href='sala8.html'">Sala 8</button>
+            <button onclick="window.location.href='sala9.html'">Sala 9</button>
+            <button onclick="window.location.href='sala10.html'">Sala 10</button>
+        </div>
+
+        <div class="comprados-container">
+            <h2>Números Comprados</h2>
+            <div id="comprados"></div>
+        </div>
+
+        <center>
+            <p>Saldo: <span id="userBalance">1000 R$</span></p>
+        </center>
+
+        <center>
+            <h2>Painel de Compra Online</h2>
+        </center>
+
+        <div id="numberPanel"></div>
+
+        <center>
+            <button class="sort-button" onclick="sortearNumeros()" disabled>Sortear Números</button>
+        </center>
+
+        <div id="sorteioTela" class="modal hidden">
+            <div class="modal-content">
+                <span class="close" onclick="fecharTelaSorteio()">&times;</span>
+                <h2>Números Sorteados</h2>
+                <p id="numerosSorteados"></p>
+                <h2>Números Bônus</h2>
+                <p id="numerosBonus"></p>
+                <h2>Resumo da Rodada</h2>
+                <p id="resumoRodada"></p>
+            </div>
+        </div>
+
+        <div id="missaoProgressoContainer">
+            <div id="missaoProgresso"></div>
+        </div>
+
+        <div id="historicoSorteios">
+            <h2>Histórico de Sorteios</h2>
+            <div id="historicoContent"></div>
+        </div>
+    </main>
+
+    <div class="chat-button" id="chatButton" onclick="toggleChat()">
+        💬 <span id="usuariosAtivos">Usuários ativos: 0</span>
+    </div>
+
+    <div class="chat-popup" id="chatPopup">
+        <div class="chat-header">
+            <span>Chat</span>
+            <span id="usuariosAtivos">Usuários ativos: 0</span>
+            <button id="closeChat" onclick="fecharChat()">&times;</button>
+        </div>
+        <div class="chat-body" id="messages"></div>
+        <div class="chat-footer">
+            <input type="text" id="messageInput" placeholder="Digite sua mensagem..." />
+            <button id="sendButton" onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
+
+    <div id="animation-message" class="hidden"></div>
+
+    <footer>
+        <p>&copy; 2024 Seu Nome ou Empresa. Todos os direitos reservados.</p>
+        <p><a href="contato.html">Entre em contato</a></p>
+    </footer>
+
+    <!-- Tela de bloqueio -->
+    <div id="overlay" class="overlay">
+        <div class="overlay-content">
+            <h2>Acesso Negado</h2>
+            <p>Você precisa estar logado para acessar esta página.</p>
+            <div class="button-container">
+                <button onclick="window.location.href='login.html'" class="btn">Login</button>
+                <button onclick="window.location.href='cadastro.html'" class="btn">Cadastro</button>
+            </div>
+        </div>
+    </div>
+ 
+   
+<script src="script.js"></script>
+    
+</body>
+</html>

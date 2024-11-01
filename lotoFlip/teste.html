@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animação de Vitória</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        #victoryAnimation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.85);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            z-index: 9999;
+            cursor: pointer;
+        }
+
+        #victoryAnimation.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .victoryContent {
+            background: linear-gradient(135deg, #ff007f, #ffcc00);
+            padding: 30px 50px;
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            color: #fff;
+            font-size: 2.5em;
+            animation: bounce 0.5s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes scale {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes move {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Teste da Animação de Vitória</h1>
+    <button onclick="atualizarSaldo(10, 'normal')">Simular Ganho</button>
+    <button onclick="atualizarSaldo(50, 'missao')">Simular Ganho de Missão</button>
+
+    <div id="victoryAnimation" onclick="fecharAnimacao()">
+        <div class="victoryContent" id="victoryMessage"></div>
+    </div>
+
+    <script>
+        function exibirAnimacaoDeVitoria(valor, origem) {
+            const victoryMessage = document.getElementById('victoryMessage');
+            const victoryAnimation = document.getElementById('victoryAnimation');
+            let total = 0;
+            const increment = valor / 100; // Aumentar o número de incrementos
+            let animationDuration = 3000; // Duração total da animação em milissegundos
+            let startTime;
+
+            victoryMessage.innerHTML = origem === 'missao' 
+                ? `Você ganhou <strong>0 R$</strong> da missão! 🎉` 
+                : `Você ganhou <strong>0 R$</strong>! 🎉`;
+
+            victoryAnimation.classList.add('show');
+
+            function animate(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                total = Math.min(valor, total + increment * (elapsed / animationDuration) * 100); // Acelerar a contagem
+
+                victoryMessage.innerHTML = origem === 'missao' 
+                    ? `Você ganhou <strong>${total.toFixed(2)} R$</strong> da missão! 🎉` 
+                    : `Você ganhou <strong>${total.toFixed(2)} R$</strong>! 🎉`;
+
+                victoryMessage.style.animation = 'move 0.5s ease-in-out'; // Movimento da mensagem
+
+                if (total < valor) {
+                    requestAnimationFrame(animate);
+                } else {
+                    victoryMessage.innerHTML = origem === 'missao' 
+                        ? `Você ganhou <strong>${valor.toFixed(2)} R$</strong> da missão! 🎉` 
+                        : `Você ganhou <strong>${valor.toFixed(2)} R$</strong>! 🎉`;
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function fecharAnimacao() {
+            const victoryAnimation = document.getElementById('victoryAnimation');
+            victoryAnimation.classList.remove('show');
+        }
+
+        function atualizarSaldo(valor, origem) {
+            exibirAnimacaoDeVitoria(valor.toFixed(2), origem);
+        }
+    </script>
+</body>
+</html>

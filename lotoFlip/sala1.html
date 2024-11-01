@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sala 1 - Jogo de Números</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Sala 1 - Jogo de Números</h1>
+
+    <!-- Exibição do saldo do usuário -->
+    <p>Saldo: <span id="userBalance">1000 R$</span></p>
+
+    <!-- Painel de números e botão de sorteio -->
+    <div id="numberPanel"></div>
+    <button onclick="sortearNumeros()">Sortear Números</button>
+
+    <!-- Tela para exibir os números sorteados -->
+    <div id="sorteioTela" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharTelaSorteio()">&times;</span>
+            <h2>Números Sorteados</h2>
+            <p id="numerosSorteados"></p>
+
+            <h2>Números Bônus</h2>
+            <p id="numerosBonus"></p>
+        </div>
+    </div>
+    
+    <!-- Histórico de sorteios -->
+    <div id="historicoSorteios">
+        <h2>Histórico de Sorteios</h2>
+        <div id="historicoContent"></div>
+    </div>
+   
+    <script src="script.js"></script>
+</body>
+</html>

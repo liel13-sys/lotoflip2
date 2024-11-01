@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Usuário</title>
+  <script type="module" src="./main.js"></script>
+  <style>
+    /* Reset básico para garantir que todos os navegadores tenham um padrão similar */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #4CAF50; /* Cor verde de fundo */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: white;
+      font-size: 2.5em;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    img {
+      width: 100px; /* Ajuste a largura da imagem conforme necessário */
+      margin-bottom: 20px;
+    }
+
+    form {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      width: 300px;
+      transition: transform 0.2s;
+    }
+
+    form:hover {
+      transform: scale(1.02);
+    }
+
+    label {
+      margin-bottom: 5px;
+      display: block;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    input[type="file"],
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus,
+    input[type="tel"]:focus,
+    input[type="number"]:focus {
+      border-color: #4CAF50; /* Cor verde ao focar */
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50; /* Cor verde do botão */
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-bottom: 10px; /* Espaço entre os botões */
+    }
+
+    button:hover {
+      background-color: #45a049; /* Tom mais escuro de verde ao passar o mouse */
+    }
+
+    .login-button {
+      background-color: #007bff; /* Cor azul do botão de login */
+    }
+
+    .login-button:hover {
+      background-color: #0056b3; /* Tom mais escuro de azul ao passar o mouse */
+    }
+
+    #message {
+      margin-top: 15px;
+      color: red;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <img src="img/logo.jpg" alt="Logotipo"> <!-- Substitua pelo caminho da sua imagem -->
+  <h1>Cadastro de Usuário</h1>
+  <form id="signupForm">
+    <label for="fullName">Nome Completo:</label>
+    <input type="text" id="fullName" required>
+
+    <label for="cpf">CPF:</label>
+    <input type="number" id="cpf" required placeholder="123.456.789-00" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" title="Insira o CPF no formato 123.456.789-00">
+
+    <label for="phone">Telefone:</label>
+    <input type="tel" id="phone" required placeholder="(00) 00000-0000">
+
+    <label for="email">E-mail:</label>
+    <input type="email" id="email" required>
+
+    <label for="password">Senha:</label>
+    <input type="password" id="password" required>
+
+    <label for="document">Anexar Documento:</label>
+    <input type="file" id="document" accept=".pdf,.jpg,.png" required>
+
+    <button type="submit">Cadastrar</button>
+    <a href="login.html" class="login-button">Voltar para Login</a> <!-- Link para a tela de login -->
+  </form>
+
+  <p id="message"></p>
+</body>
+</html>

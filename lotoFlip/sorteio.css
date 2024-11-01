@@ -1,0 +1,67 @@
+/* Estilos básicos para o componente */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+#sorteio-container {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin: 20px auto;
+    width: 90%;
+    max-width: 600px;
+}
+
+#sorteio-container h2 {
+    margin-top: 0;
+    color: #4caf50;
+}
+
+.info-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.info-container p {
+    font-size: 18px;
+    color: #333;
+}
+
+.info-container button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.info-container button:hover {
+    background-color: #388e3c;
+}
+
+.user-list {
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+}
+
+.user-list h3 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.user-list p {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 5px 0;
+}
